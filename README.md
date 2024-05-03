@@ -8,4 +8,6 @@ A Chrome extension that finds the text on the Browser and replaces it with your 
 ![image](https://github.com/UjjwalSud/chrome-extension-replace-text/assets/6552252/398bdf85-964b-485e-979b-d914f3253675) 
 ![image](https://github.com/UjjwalSud/chrome-extension-replace-text/assets/6552252/1f51c5c9-f34b-4bfb-b556-09825e9203f4) 
 
+## Code folder structure
+![image](https://github.com/UjjwalSud/chrome-extension-replace-text/assets/6552252/4714ee60-364e-4b23-9c9b-28a32156cc61)
 
