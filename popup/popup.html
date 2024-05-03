@@ -3,85 +3,35 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="popup.css" />
     <title>Text Replacer</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 10px;
-        background-color: #f9f9f9;
-        color: #333;
-        width: 300px; /* Adjust width as necessary */
-        height: auto; /* Adjust or remove height as necessary */
-      }
-      h1 {
-        color: #555;
-        font-size: 16px;
-      }
-      input[type="text"],
-      select {
-        width: calc(100% - 16px); /* Adjust width considering padding */
-        padding: 8px;
-        margin: 8px 0;
-        display: inline-block;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-      }
-      button {
-        width: calc(100% - 16px); /* Adjust width considering padding */
-        background-color: #4caf50;
-        color: white;
-        padding: 10px 15px;
-        margin: 8px 0;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-      }
-      button:hover {
-        background-color: #45a049;
-      }
-      /* Styles for results messages */
-      #results {
-        margin-top: 10px;
-        padding: 5px;
-        border-radius: 4px;
-        color: #fff; /* White text for better readability on colored backgrounds */
-      }
-      .error {
-        background-color: #f44336; /* Red for errors */
-      }
-      .success {
-        background-color: #4caf50; /* Green for success */
-      }
-      .info {
-        background-color: #2196f3; /* Blue for informational messages */
-      }
-    </style>
   </head>
   <body>
-    <h1>Text Replacer</h1>
-    <input
-      type="text"
-      id="replaceFromText"
-      placeholder="Enter text to replace"
-      title="Enter the text you want to search for on the page."
-    />
-    <select id="replaceWithDropdown">
-      <option value="">Please Select</option>
-      <option value="Text 1">Text 1</option>
-      <option value="Text 2">Text 2</option>
-      <option value="Text 3">Text 3</option>
-    </select>
-    <input
-      type="text"
-      id="replaceWithText"
-      placeholder="Enter replacement text"
-      title="Enter the text that will replace the original text."
-    />
-    <button id="replaceButton">Replace</button>
-    <div id="results" style="margin-top: 10px"></div>
+    <form id="textReplacerForm">
+      <h1>Text Replacer</h1>
+      <input
+        type="text"
+        id="replaceFromText"
+        placeholder="Enter text to replace"
+        title="Enter the text you want to search for on the page."
+      />
+      <select id="replaceWithDropdown">
+        <option value="">Please Select</option>
+        <option value="Text 1">Text 1</option>
+        <option value="Text 2">Text 2</option>
+        <option value="Text 3">Text 3</option>
+      </select>
+      <input
+        type="text"
+        id="replaceWithText"
+        placeholder="Enter replacement text"
+        title="Enter the text that will replace the original text."
+      />
+      <button id="replaceButton" type="button">Replace</button>
+      <div id="results" style="margin-top: 10px"></div>
+    </form>
     <script src="popup.js"></script>
+    <script src="../content_scripts/helper/form_data_handler.js"></script>
     <script src="../content_scripts/helper/ui_helper.js"></script>
   </body>
 </html>

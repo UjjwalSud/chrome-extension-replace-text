@@ -1,90 +1,92 @@
-// When the popup is loaded, get the current selection
+const PopupController = (function () {
+  let uiHelper;
+  let formHandler;
+
+  function init() {
+    uiHelper = new UIHelper();
+    formHandler = new FormDataHandler("textReplacerForm");
+    attachEventHandlers();
+  }
+
+  function attachEventHandlers() {
+    document
+      .getElementById("replaceButton")
+      .addEventListener("click", handleReplaceButtonClick);
+  }
+
+  function handleReplaceButtonClick() {
+    const searchText = formHandler.getValue("replaceFromText");
+    const replaceText = formHandler.getValue("replaceWithText");
+    const replaceDropdownValue = formHandler.getValue("replaceWithDropdown");
+
+    if (!validateInput(searchText, replaceText, replaceDropdownValue)) {
+      return; // Stop further execution if validation fails
+    }
+
+    const finalReplaceText = replaceText || replaceDropdownValue;
+    replaceTextOnPage(searchText, finalReplaceText);
+  }
+
+  function validateInput(searchText, replaceText, replaceDropdownValue) {
+    if (!searchText) {
+      uiHelper.updateResults(
+        "Error: Please enter the text you want to replace.",
+        "error"
+      );
+      return false;
+    }
+    if (!replaceText && !replaceDropdownValue) {
+      uiHelper.updateResults(
+        "Error: Please enter or select the replacement text.",
+        "error"
+      );
+      return false;
+    }
+    if (replaceText && replaceDropdownValue) {
+      uiHelper.updateResults(
+        "Error: Please enter replacement text OR select from the dropdown, not both.",
+        "error"
+      );
+      return false;
+    }
+    return true;
+  }
+
+  function replaceTextOnPage(searchText, replaceText) {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      chrome.tabs.sendMessage(
+        tabs[0].id,
+        {
+          action: "replaceText",
+          searchText: searchText,
+          replaceText: replaceText,
+        },
+        responseHandler
+      );
+    });
+  }
+
+  function responseHandler(response) {
+    if (chrome.runtime.lastError) {
+      uiHelper.updateResults(
+        `Error: ${chrome.runtime.lastError.message}`,
+        "error"
+      );
+    } else if (response && response.count !== undefined) {
+      uiHelper.updateResults(
+        `Replace All: ${response.count} occurrences were replaced on the entire page.`,
+        "success"
+      );
+    } else {
+      uiHelper.updateResults("No replacements were made.", "info");
+    }
+  }
+
+  return {
+    init: init,
+  };
+})();
+
 document.addEventListener("DOMContentLoaded", function () {
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    chrome.scripting.executeScript(
-      {
-        target: { tabId: tabs[0].id },
-        function: getSelectedText,
-      },
-      (results) => {
-        if (results[0].result.length > 0) {
-          document.getElementById("replaceFromText").value = results[0].result;
-        }
-      }
-    );
-  });
-});
-
-// Function to be executed in the context of the web page
-function getSelectedText() {
-  return window.getSelection().toString();
-}
-
-// When the replace button is clicked
-document.getElementById("replaceButton").addEventListener("click", function () {
-  const uiHelper = new UIHelper();
-  const searchText = document.getElementById("replaceFromText").value;
-  let replaceText = document.getElementById("replaceWithText").value;
-  const replaceDropdownValue = document.getElementById(
-    "replaceWithDropdown"
-  ).value;
-
-  // Error handling
-  if (!searchText) {
-    uiHelper.updateResults(
-      "Error: Please enter the text you want to replace.",
-      "error"
-    );
-    //document.getElementById('results').textContent = ;
-    return;
-  }
-  if (!replaceText && !replaceDropdownValue) {
-    //document.getElementById('results').textContent = "";
-    uiHelper.updateResults(
-      "Error: Please enter or select the replacement text.",
-      "error"
-    );
-    return;
-  }
-  if (replaceText && replaceDropdownValue) {
-    uiHelper.updateResults(
-      "Error: Please enter replacement text OR select from the dropdown, not both.",
-      "error"
-    );
-    //document.getElementById('results').textContent = "";
-    return;
-  }
-
-  let finalReplaceText = replaceText ? replaceText : replaceDropdownValue;
-
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    chrome.tabs.sendMessage(
-      tabs[0].id,
-      {
-        action: "replaceText",
-        searchText: searchText,
-        replaceText: finalReplaceText,
-      },
-      function (response) {
-        // Handle the response from the content script
-        if (response && response.count !== undefined && response.count > 0) {
-          uiHelper.updateResults(
-            `Success: Replace All: ${response.count} occurrences were replaced on the entire page.`,
-            "success"
-          );
-          //document.getElementById('results').textContent = ;
-        } else if (chrome.runtime.lastError) {
-          // Handle any errors that might occur
-          uiHelper.updateResults(
-            "Error: No replacements were made or an error occurred.",
-            "error"
-          );
-          //document.getElementById('results').textContent = "";
-        } else {
-          uiHelper.updateResults("Result: No replacements were made.", "info");
-          //document.getElementById('results').textContent = "No replacements were made.";
-        }
-      }
-    );
-  });
+  PopupController.init();
 });

@@ -34,3 +34,20 @@ button {
 button:hover {
   background-color: #45a049;
 }
+
+/* Styles for results messages */
+#results {
+  margin-top: 10px;
+  padding: 5px;
+  border-radius: 4px;
+  color: #fff; /* White text for better readability on colored backgrounds */
+}
+.error {
+  background-color: #f44336; /* Red for errors */
+}
+.success {
+  background-color: #4caf50; /* Green for success */
+}
+.info {
+  background-color: #2196f3; /* Blue for informational messages */
+}
