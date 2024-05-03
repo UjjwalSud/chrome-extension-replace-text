@@ -15,12 +15,7 @@
         placeholder="Enter text to replace"
         title="Enter the text you want to search for on the page."
       />
-      <select id="replaceWithDropdown">
-        <option value="">Please Select</option>
-        <option value="Text 1">Text 1</option>
-        <option value="Text 2">Text 2</option>
-        <option value="Text 3">Text 3</option>
-      </select>
+      <select id="replaceWithDropdown"></select>
       <input
         type="text"
         id="replaceWithText"
@@ -30,8 +25,9 @@
       <button id="replaceButton" type="button">Replace</button>
       <div id="results" style="margin-top: 10px"></div>
     </form>
-    <script src="popup.js"></script>
+    <script type="module" src="popup.js"></script>
     <script src="../content_scripts/helper/form_data_handler.js"></script>
     <script src="../content_scripts/helper/ui_helper.js"></script>
+    <script type="module" src="../content_scripts/data_service.js"></script>
   </body>
 </html>

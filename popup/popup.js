@@ -1,11 +1,38 @@
+import dataService from "../content_scripts/data_service.js";
 const PopupController = (function () {
   let uiHelper;
   let formHandler;
 
-  function init() {
+  async function init() {
     uiHelper = new UIHelper();
     formHandler = new FormDataHandler("textReplacerForm");
+    await loadDropdownData();
     attachEventHandlers();
+  }
+
+  async function loadDropdownData() {
+    try {
+      const dropdownData = await dataService.fetchDropdownData();
+      populateDropdown(dropdownData);
+    } catch (error) {
+      console.error("Failed to load dropdown data:", error);
+      // Optionally update the UI to reflect that the dropdown data could not be loaded
+      uiHelper.updateResults("Error loading dropdown options.", "error");
+    }
+  }
+
+  function populateDropdown(data) {
+    const dropdown = document.getElementById("replaceWithDropdown");
+    // Clear all existing options
+    while (dropdown.options.length > 0) {
+      dropdown.remove(0);
+    }
+    data.forEach((item) => {
+      const option = document.createElement("option");
+      option.text = item.text;
+      option.value = item.value;
+      dropdown.add(option);
+    });
   }
 
   function attachEventHandlers() {
